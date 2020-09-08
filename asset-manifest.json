@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/userCenter/static/css/main.abed17fb.chunk.css",
+    "main.js": "/userCenter/static/js/main.418a4323.chunk.js",
+    "main.js.map": "/userCenter/static/js/main.418a4323.chunk.js.map",
+    "runtime-main.js": "/userCenter/static/js/runtime-main.e93a1243.js",
+    "runtime-main.js.map": "/userCenter/static/js/runtime-main.e93a1243.js.map",
+    "static/js/2.483abf64.chunk.js": "/userCenter/static/js/2.483abf64.chunk.js",
+    "static/js/2.483abf64.chunk.js.map": "/userCenter/static/js/2.483abf64.chunk.js.map",
+    "index.html": "/userCenter/index.html",
+    "precache-manifest.0b7583699459eb564b31f98dfd65a1c9.js": "/userCenter/precache-manifest.0b7583699459eb564b31f98dfd65a1c9.js",
+    "service-worker.js": "/userCenter/service-worker.js",
+    "static/css/main.abed17fb.chunk.css.map": "/userCenter/static/css/main.abed17fb.chunk.css.map",
+    "static/js/2.483abf64.chunk.js.LICENSE.txt": "/userCenter/static/js/2.483abf64.chunk.js.LICENSE.txt",
+    "static/media/banner.png": "/userCenter/static/media/banner.91bf249f.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e93a1243.js",
+    "static/js/2.483abf64.chunk.js",
+    "static/css/main.abed17fb.chunk.css",
+    "static/js/main.418a4323.chunk.js"
+  ]
+}
