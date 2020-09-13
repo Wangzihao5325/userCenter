@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import MyFetch from './api/index';
 import './App.css';
 import bannerImage from './image/banner.png';
 import avater from './image/avater.png';
@@ -10,15 +9,6 @@ import custom from './image/custom.png';
 import global from './image/global.png';
 import mobile from './image/mobile.png';
 import wifi from './image/wifi.png';
-
-const TestData = [
-  { key: '1', isSelect: false, time: 30, price: 30, dayPrice: 1 },
-  { key: '2', isSelect: false, time: 60, price: 50, dayPrice: 0.83 },
-  { key: '3', isSelect: false, time: 90, price: 70, dayPrice: 0.78 },
-  { key: '4', isSelect: false, time: 120, price: 60, dayPrice: 0.5 }
-];
-
-const sessionId = '0293bf8cb113aff0c285ac9c7b4d36505cdf108e';
 const IconList = [
   { img: mobile, title: '全球国际专线' },
   { img: wifi, title: 'WIFI高级加速通道' },
@@ -30,14 +20,14 @@ const Item = (props) => {
   return (
     <div className={`item-container ${props.isSelect ? 'item-select' : 'item-unselect'}`} onClick={props.itemPress}>
       <div className={`package-times ${props.isSelect ? 'select-text' : 'unselect-text'}`}>
-        <div className=''>{`${props.time}天`}</div>
+        <div className=''>{`${props.name}`}</div>
         <div className={`separator ${props.isSelect ? 'select-sep' : 'unselect-sep'}`} />
       </div>
       <div className={`package-content ${props.isSelect ? 'select-content-text' : 'unselect-content-text'}`}>
-        <div style={{ fontSize: 24 }}>{`${props.price}元`}<em style={{ fontSize: 15, fontStyle: 'normal' }}>/月</em></div>
+        <div style={{ fontSize: 24 }}>{`${props.price}元`}</div>
       </div>
       <div className={`package-content2 ${props.isSelect ? 'select-content-text' : 'unselect-content-text'}`}>
-        <div style={{ fontSize: 15 }}>{`${props.dayPrice}元`}/天</div>
+        <div style={{ fontSize: 15 }}>{`${props.intro}`}</div>
       </div>
     </div>
   );
@@ -54,34 +44,55 @@ const IconItem = (props) => {
 
 class App extends Component {
   state = {
-    userName: '小月月',
-    phone: '13612345678',
-    list: TestData,
+    userName: '',
+    phone: '',
+    list: [],
     selectIndex: -1,
     selectData: { price: 0 }
   }
-  componentDidMount() {
-    MyFetch(
-      'userInfo',
-      {
-        session_id: sessionId,
-        debug: 'towseruruncle'
-      },
-      (res) => {
-        console.log('---userinfo---');
-        console.log(res);
-      })
 
-    MyFetch(
-      'getPackageList',
-      {
-        session_id: sessionId,
-        debug: 'towseruruncle'
-      },
-      (res) => {
-        console.log('---packagelist---');
-        console.log(res);
-      })
+  componentDidMount() {
+    window._unsafe_setState = this._unsafe_setState;
+    window._unsafe_user_setState = this._unsafe_user_setState;
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'getUserInfo' }));
+      window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'getPackageList' }));
+    }
+    /*
+        MyFetch(
+          'userInfo',
+          {
+            session_id: sessionId,
+            debug: 'towseruruncle'
+          },
+          (res) => {
+            console.log('---userinfo---');
+            console.log(res);
+          })
+    
+        MyFetch(
+          'getPackageList',
+          {
+            session_id: sessionId,
+            debug: 'towseruruncle'
+          },
+          (res) => {
+            console.log('---packagelist---');
+            console.log(res);
+          })
+          */
+  }
+
+  _unsafe_user_setState = (payload) => {
+    this.setState({
+      ...payload
+    });
+  }
+
+  _unsafe_setState = (payload) => {
+    delete payload.timestamp;
+    let data = Object.values(payload);
+    this.setState({ list: data });
   }
 
   itemPress(item, index) {
@@ -97,6 +108,15 @@ class App extends Component {
         selectIndex: index,
         selectData: regList[index]
       });
+    }
+  }
+
+  makeOrder = () => {
+    const { selectIndex, selectData } = this.state;
+    if (selectIndex > -1) {
+      console.log('---here---');
+      console.log(selectData);
+      window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'makeOrder', data: selectData }));
     }
   }
 
@@ -121,7 +141,7 @@ class App extends Component {
           {
             list.map((item, index) => {
               return (
-                <div className={`item-wrapper ${index % 2 == 0 ? "left" : "right"}`}>
+                <div key={item.id} className={`item-wrapper ${index % 2 == 0 ? "left" : "right"}`}>
                   <Item {...item} itemPress={() => this.itemPress(item, index)} />
                 </div>
               );
@@ -138,7 +158,7 @@ class App extends Component {
             })
           }
         </div>
-        <div className="submit-button">
+        <div className="submit-button" onClick={this.makeOrder}>
           <div>{`立即支付${price}元`}</div>
         </div>
       </div>
