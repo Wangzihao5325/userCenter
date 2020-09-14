@@ -116,7 +116,8 @@ class App extends Component {
     if (selectIndex > -1) {
       console.log('---here---');
       console.log(selectData);
-      window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'makeOrder', data: selectData }));
+      //window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'makeOrder', data: selectData }));
+      window.location.href = 'https://qr.alipay.com/bax043631zdgow7aocve00dc';
     }
   }
 
