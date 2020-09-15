@@ -54,6 +54,7 @@ class App extends Component {
   componentDidMount() {
     window._unsafe_setState = this._unsafe_setState;
     window._unsafe_user_setState = this._unsafe_user_setState;
+    window._unsafe_change_href = this._unsafe_change_href;
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'getUserInfo' }));
       window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'getPackageList' }));
@@ -95,6 +96,10 @@ class App extends Component {
     this.setState({ list: data });
   }
 
+  _unsafe_change_href = (payload) => {
+    window.location.href = `${payload.code_url}`;
+  }
+
   itemPress(item, index) {
     const { list, selectIndex } = this.state;
     if (index !== selectIndex) {
@@ -116,8 +121,7 @@ class App extends Component {
     if (selectIndex > -1) {
       console.log('---here---');
       console.log(selectData);
-      //window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'makeOrder', data: selectData }));
-      window.location.href = 'https://qr.alipay.com/bax043631zdgow7aocve00dc';
+      window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'makeOrder', data: selectData }));
     }
   }
 
