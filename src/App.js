@@ -16,6 +16,16 @@ const IconList = [
   { img: global, title: '专属智能加速' },
   { img: custom, title: '会员优选客服通道' },
 ];
+
+const Modal = (props) => {
+  return (
+    <div className="modal" onClick={props.onClick}>
+      <div className="paytype margin1" onClick={props.payWechat}><div className="paytype-text">微信</div></div>
+      <div className="paytype margin2" onClick={props.payAli}><div className="paytype-text">支付宝</div></div>
+    </div>
+  );
+}
+
 const Item = (props) => {
   return (
     <div className={`item-container ${props.isSelect ? 'item-select' : 'item-unselect'}`} onClick={props.itemPress}>
@@ -48,7 +58,8 @@ class App extends Component {
     phone: '',
     list: [],
     selectIndex: -1,
-    selectData: { price: 0 }
+    selectData: { price: 0 },
+    isModalShow: false
   }
 
   componentDidMount() {
@@ -97,7 +108,10 @@ class App extends Component {
   }
 
   _unsafe_change_href = (payload) => {
-    window.location.href = `${payload.code_url}`;
+    //alert(payload.code_url)
+    //window.location.href = `${payload.code_url}`;
+    //https://wxpay.wxutil.com/mch/pay/h5.v2.php
+    window.location.href = 'https://wxpay.wxutil.com/mch/pay/h5.v2.php';
   }
 
   itemPress(item, index) {
@@ -116,17 +130,37 @@ class App extends Component {
     }
   }
 
-  makeOrder = () => {
+  makeOrder = (payType) => {
     const { selectIndex, selectData } = this.state;
     if (selectIndex > -1) {
       console.log('---here---');
       console.log(selectData);
-      window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'makeOrder', data: selectData }));
+      window.ReactNativeWebView.postMessage(JSON.stringify({ key: 'makeOrder', data: selectData, payType }));
     }
   }
 
+  showPayTypeSelectModal = () => {
+    this.setState({
+      isModalShow: true
+    }, () => {
+      document.addEventListener('touchmove', this.stopTouchMove, { passive: false });
+    });
+  }
+
+  unshowPayTypeSelectModal = () => {
+    this.setState({
+      isModalShow: false
+    }, () => {
+      document.removeEventListener('touchmove', this.stopTouchMove, { passive: false });
+    });
+  }
+
+  stopTouchMove = (e) => {
+    e.preventDefault();
+  }
+
   render() {
-    const { userName, phone, list, selectData: { price } } = this.state;
+    const { userName, phone, list, isModalShow, selectData: { price } } = this.state;
     return (
       <div className="App">
         <div className="banner" >
@@ -163,9 +197,16 @@ class App extends Component {
             })
           }
         </div>
-        <div className="submit-button" onClick={this.makeOrder}>
+        <div className="submit-button" onClick={this.showPayTypeSelectModal}>
           <div>{`立即支付${price}元`}</div>
         </div>
+        {isModalShow &&
+          <Modal
+            onClick={this.unshowPayTypeSelectModal}
+            payAli={() => this.makeOrder("9")}
+            payWechat={() => this.makeOrder("3")}
+          />
+        }
       </div>
     );
   }
