@@ -109,9 +109,9 @@ class App extends Component {
 
   _unsafe_change_href = (payload) => {
     //alert(payload.code_url)
-    //window.location.href = `${payload.code_url}`;
+    window.location.href = `${payload.code_url}`;
     //https://wxpay.wxutil.com/mch/pay/h5.v2.php
-    window.location.href = 'https://wxpay.wxutil.com/mch/pay/h5.v2.php';
+    //window.location.href = 'https://wxpay.wxutil.com/mch/pay/h5.v2.php';
   }
 
   itemPress(item, index) {
