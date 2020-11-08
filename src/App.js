@@ -59,7 +59,10 @@ class App extends Component {
     list: [],
     selectIndex: -1,
     selectData: { price: 0 },
-    isModalShow: false
+    isModalShow: false,
+    package_name: '',
+    package_type: '',
+    package_end_time: ''
   }
 
   componentDidMount() {
@@ -96,6 +99,7 @@ class App extends Component {
   }
 
   _unsafe_user_setState = (payload) => {
+    console.log('121212', payload)
     this.setState({
       ...payload
     });
@@ -160,7 +164,8 @@ class App extends Component {
   }
 
   render() {
-    const { userName, phone, list, isModalShow, selectData: { price } } = this.state;
+    const { userName, phone, list, isModalShow, selectData: { price }, package_type, package_name, package_end_time } = this.state;
+    let packageText = package_type ? `${package_name}  (${package_end_time}到期)` : '您尚未开通会员'
     return (
       <div className="App">
         <div className="banner" >
@@ -170,7 +175,7 @@ class App extends Component {
           <div className="user-info">
             {`${userName}(${phone})`}
           </div>
-          <div className="guest">你尚未开通会员</div>
+          <div className="guest">{`${packageText}`}</div>
         </div>
         <div className="sub-title title1">
           <div>会员套餐</div>
